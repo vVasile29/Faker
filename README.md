@@ -14,3 +14,7 @@ A android app/website game where everyone but one player (faker) get a word. One
 - everybody but the faker gets a word on their screen, faker gets "You're the faker!"
 - the host can stop this game and initiate the voting after 3 rounds have passed
 - he then can specify if the faker got caught or not, if the faker won he gets a point, otherwise the other players get a point
+
+## How to start
+
+run `npm run dev` in the client directory and `node server.js` in the server directory
