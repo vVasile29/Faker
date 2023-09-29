@@ -4,7 +4,7 @@
 
 A android app/website game where everyone but one player (faker) get a word. One person starts calling out a related word, without making it too obvious what the initial word was, while still keeping it related enough to not look like a faker. Other players continue in clockwise direction. The faker tries blending in by figuring out the context. After 3 rounds the players decide on one faker. If the faker is able to name the word or did not get caught he gets a point, otherwise all the other players do.
 
-## Technology
+## Mindstorming
 
 - listen server
 - one player is the host (server and client) and generates a link/qr code with which the other players (clients) can join the host's game
