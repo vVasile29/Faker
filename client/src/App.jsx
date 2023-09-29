@@ -6,6 +6,8 @@ const App = () => {
   const [playerName, setPlayerName] = useState('');
   const [players, setPlayers] = useState([]);
   const [isHost, setIsHost] = useState(false); // Track if the current user is the host
+  const [isCreatingGame, setIsCreatingGame] = useState(false); // Track if the user wants to create a game
+  const [gameId, setGameId] = useState(''); // Track the game ID
 
   // Initialize socket connection
   useEffect(() => {
@@ -23,6 +25,17 @@ const App = () => {
       setIsHost(true);
     });
 
+    // Handle when the game is created and a game ID is provided
+    socket.on('game-created', (createdGameId) => {
+      setGameId(createdGameId);
+      setIsCreatingGame(false); // Stop showing game creation elements
+    });
+
+    // Handle when the game is not found (invalid game ID)
+    socket.on('game-not-found', () => {
+      alert('Game not found. Please check the game ID.');
+    });
+
     return () => {
       socket.disconnect();
     };
@@ -36,26 +49,47 @@ const App = () => {
     }
   };
 
-  // Event handler for the player joining the game
+  // Event handler for creating a game
+  const createGame = () => {
+    setIsCreatingGame(true);
+    socket.emit('create-game', playerName); // Inform the server to create a game
+  };
+
+  // Event handler for joining a game with a game ID
   const joinGame = () => {
-    socket.emit('join-game', playerName); // Inform the server that the player is joining with their name
+    socket.emit('join-game', gameId, playerName); // Inform the server that the player is joining with their name and game ID
   };
 
   return (
     <div>
-      {isHost ? (
+      {isCreatingGame ? (
         <div>
-          <button onClick={startGame}>Start Game</button>
+          {/* Render game creation elements here */}
         </div>
       ) : (
         <div>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={playerName}
-            onChange={(e) => setPlayerName(e.target.value)}
-          />
+          {isHost ? (
+            <div>
+              <button onClick={startGame}>Start Game</button>
+            </div>
+          ) : (
+            <div>
+              <input
+                type="text"
+                placeholder="Your Name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Game ID"
+                value={gameId}
+                onChange={(e) => setGameId(e.target.value)}
+              />
+            </div>
+          )}
           <button onClick={joinGame}>Join Game</button>
+          <button onClick={createGame}>Create Game</button>
         </div>
       )}
 
